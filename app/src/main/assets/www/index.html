@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>صحتي - الإجازات</title>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #0284c7;
+    }
+    * { box-sizing: border-box; font-family: Tahoma, Arial, sans-serif; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* شاشة القفل بكلمة السر */
+    #lock-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(160deg, #0f766e 0%, #0284c7 100%);
+    }
+    .lock-box {
+      width: 100%;
+      max-width: 380px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      background: #ccfbf1;
+      color: #0f766e;
+      font-weight: bold;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .lock-box h2 { margin: 6px 0 6px; font-size: 22px; }
+    .lock-box p { margin: 0 0 18px; color: var(--muted); font-size: 13px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 12px;
+      background: #f8fafc;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:active { background: var(--primary-dark); }
+    .err { color: #dc2626; font-size: 13px; min-height: 18px; margin-bottom: 8px; }
+
+    /* التطبيق الرئيسي */
+    #app-screen { display: none; padding-bottom: 65px; }
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { margin: 0; font-size: 18px; }
+    header small { opacity: 0.9; font-size: 12px; }
+    .lock-btn {
+      width: auto;
+      padding: 7px 12px;
+      font-size: 12px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+    }
+
+    .container { padding: 14px; max-width: 650px; margin: auto; }
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .card h3 { margin: 0 0 12px; font-size: 16px; color: var(--primary); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+
+    /* بطاقة الإجازة الصادرة */
+    .leave-report {
+      border: 2px solid var(--primary);
+      border-radius: 14px;
+      padding: 16px;
+      background: #f0fdfa;
+    }
+    .report-top {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed #99f6e4;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      font-weight: bold;
+      color: var(--primary-dark);
+    }
+    .row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+    .row span:first-child { color: var(--muted); }
+    .row span:last-child { font-weight: bold; }
+    .print-btn { margin-top: 10px; background: var(--accent); }
+
+    .footer-credit {
+      text-align: center;
+      padding: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- شاشة كلمة السر -->
+  <div id="lock-screen">
+    <div class="lock-box">
+      <div class="badge">صحتي • بوابة الإجازات</div>
+      <h2>تسجيل الدخول</h2>
+      <p>أدخل كلمة السر لفتح التطبيق</p>
+      <input type="password" id="pass-input" placeholder="أدخل كلمة السر" />
+      <div class="err" id="err-msg"></div>
+      <button onclick="unlockApp()">دخول</button>
+      <div style="margin-top:16px; font-size:12px; color:#64748b;">
+        برمجة المهندس عمرو حسن علي
+      </div>
+    </div>
+  </div>
+
+  <!-- واجهة التطبيق بعد الدخول -->
+  <div id="app-screen">
+    <header>
+      <div>
+        <h1>صحتي - إصدار الإجازات</h1>
+        <small>نظام عرض وإصدار الإجازات المرضية</small>
+      </div>
+      <button class="lock-btn" onclick="lockApp()">قفل</button>
+    </header>
+
+    <div class="container">
+      <div class="card">
+        <h3>إصدار إجازة جديدة</h3>
+        <label>اسم المستفيد</label>
+        <input type="text" id="patient-name" value="أحمد محمد سالم" />
+
+        <div class="grid-2">
+          <div>
+            <label>رقم الهوية / الملف</label>
+            <input type="text" id="id-num" value="1098765432" />
+          </div>
+          <div>
+            <label>مدة الإجازة (أيام)</label>
+            <input type="number" id="days" value="3" min="1" max="90" />
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label>من تاريخ</label>
+            <input type="date" id="start-date" value="2026-11-20" />
+          </div>
+          <div>
+            <label>المنشأة الطبية</label>
+            <input type="text" id="facility" value="مجمع صحتي الطبي" />
+          </div>
+        </div>
+
+        <button onclick="issueLeave()">إصدار الإجازة</button>
+      </div>
+
+      <div class="card">
+        <h3>تفاصيل الإجازة الصادرة</h3>
+        <div class="leave-report" id="report-box">
+          <div class="report-top">
+            <span>إجازة مرضية معتمدة</span>
+            <span id="rep-code">#LV-2026-841</span>
+          </div>
+          <div class="row"><span>الاسم:</span><span id="rep-name">أحمد محمد سالم</span></div>
+          <div class="row"><span>رقم الهوية:</span><span id="rep-id">1098765432</span></div>
+          <div class="row"><span>المنشأة:</span><span id="rep-facility">مجمع صحتي الطبي</span></div>
+          <div class="row"><span>تاريخ البداية:</span><span id="rep-start">2026-11-20</span></div>
+          <div class="row"><span>المدة:</span><span id="rep-days">3 أيام</span></div>
+          <div class="row"><span>الحالة:</span><span style="color:#0f766e;">سارية</span></div>
+        </div>
+        <button class="print-btn" onclick="window.print()">طباعة / حفظ PDF</button>
+      </div>
+    </div>
+
+    <div class="footer-credit">برمجة المهندس عمرو حسن علي</div>
+  </div>
+
+  <script>
+    const SECRET_PASS = "amralmlyky";
+
+    function unlockApp() {
+      const val = document.getElementById("pass-input").value.trim();
+      const err = document.getElementById("err-msg");
+      if (val === SECRET_PASS) {
+        err.textContent = "";
+        document.getElementById("lock-screen").style.display = "none";
+        document.getElementById("app-screen").style.display = "block";
+      } else {
+        err.textContent = "كلمة السر غير صحيحة، حاول مرة أخرى.";
+      }
+    }
+
+    function lockApp() {
+      document.getElementById("pass-input").value = "";
+      document.getElementById("app-screen").style.display = "none";
+      document.getElementById("lock-screen").style.display = "flex";
+    }
+
+    function issueLeave() {
+      const name = document.getElementById("patient-name").value.trim() || "غير محدد";
+      const idNum = document.getElementById("id-num").value.trim() || "---";
+      const days = document.getElementById("days").value || "1";
+      const start = document.getElementById("start-date").value || "---";
+      const facility = document.getElementById("facility").value.trim() || "مجمع صحتي الطبي";
+      const randCode = "#LV-2026-" + Math.floor(100 + Math.random() * 900);
+
+      document.getElementById("rep-code").textContent = randCode;
+      document.getElementById("rep-name").textContent = name;
+      document.getElementById("rep-id").textContent = idNum;
+      document.getElementById("rep-facility").textContent = facility;
+      document.getElementById("rep-start").textContent = start;
+      document.getElementById("rep-days").textContent = days + " أيام";
+    }
+  </script>
+</body>
+</html>
